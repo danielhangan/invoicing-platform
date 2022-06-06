@@ -2,7 +2,7 @@ from typing import Optional, List
 from ninja import Router, Schema
 from ninja.errors import HttpError
 from .models import FiatCurrency
-from users.api import BasicAuth
+from users.api import AuthBearer
 
 
 router = Router(tags=["currencies"])
@@ -22,18 +22,18 @@ class UpdateFiatCurrency(Schema):
     country: Optional[str]
 
 
-@router.post("/", auth=BasicAuth())
+@router.post("/", auth=AuthBearer())
 def create_fiat_currency(request, payload: DisplayFiatCurrency):
     fiatcurrency = FiatCurrency.objects.create(**payload.dict())
     return {"fiat_currency": fiatcurrency.name}
 
 
-@router.get("/", response=List[DisplayFiatCurrency], auth=BasicAuth())
+@router.get("/", response=List[DisplayFiatCurrency], auth=AuthBearer())
 def get_all_fiat_currencies(request):
     return FiatCurrency.objects.all()
 
 
-@router.get("/{code}", response=DisplayFiatCurrency, auth=BasicAuth())
+@router.get("/{code}", response=DisplayFiatCurrency, auth=AuthBearer())
 def get_fiat_currency_by_code(request, code: str):
     fiat_currency = FiatCurrency.objects.filter(code=code).first()
 
@@ -46,7 +46,7 @@ def get_fiat_currency_by_code(request, code: str):
     return fiat_currency
 
 
-@router.delete("/{code}", response={204: None}, auth=BasicAuth())
+@router.delete("/{code}", response={204: None}, auth=AuthBearer())
 def delete_fiat_currency_by_code(request, code: str):
     FiatCurrency.objects.filter(code=code).delete()
     return 204, None

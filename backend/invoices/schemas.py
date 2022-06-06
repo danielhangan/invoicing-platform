@@ -1,7 +1,7 @@
 from ninja import Schema
 from datetime import date, datetime
 from typing import List, Optional
-from users.api import SmallUser
+from users.api import UserDetails
 from companies.api import DisplayCompany
 
 
@@ -21,8 +21,8 @@ class InvoiceItem(Schema):
 
 class CreateInvoice(Schema):
     user: str
-    issuer: str
-    billed_to: str
+    issuer_company_id: int
+    billed_to_company_id: int
     service_date_from: date
     service_date_to: date
     due_date: date
@@ -42,7 +42,7 @@ class ShowCurrency(Schema):
 
 
 class DisplayInvoice(Schema):
-    user: SmallUser
+    user: UserDetails
     issuer: DisplayCompany
     billed_to: DisplayCompany
     service_date_from: date

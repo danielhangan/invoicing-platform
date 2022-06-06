@@ -1,6 +1,5 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
-
-module.exports = nextConfig
+module.exports = {
+	// 3x Faster refresh 5x Faster builds
+	// Rust compiler
+	swcMinify: true,
+};

@@ -1,9 +1,7 @@
-from locale import currency
-from pyexpat import model
 from ninja import Router
 from ninja.errors import HttpError
 from typing import List, Optional
-from users.api import BasicAuth
+from users.api import AuthBearer
 
 from invoices import models, schemas
 from users.models import User
@@ -14,7 +12,7 @@ from companies.models import Company
 router = Router(tags=["invoices"])
 
 
-@router.post("/", auth=BasicAuth())
+@router.post("/", auth=AuthBearer())
 def create_invoice(request, payload: schemas.CreateInvoice):
     user = User.objects.filter(email=payload.user).first()
     if not user:
@@ -97,7 +95,7 @@ def create_invoice(request, payload: schemas.CreateInvoice):
     return {"status": 200, "invoice_created": new_invoice.id}
 
 
-@router.get("/{id}", response=schemas.DisplayInvoice, auth=BasicAuth())
+@router.get("/{id}", response=schemas.DisplayInvoice, auth=AuthBearer())
 def get_invoice_by_id(request, id: int):
     invoice = models.Invoice.objects.filter(pk=id).first()
     if not invoice:
@@ -105,7 +103,7 @@ def get_invoice_by_id(request, id: int):
     return invoice
 
 
-@router.delete("/{id}", response=schemas.DisplayInvoice, auth=BasicAuth())
+@router.delete("/{id}", response=schemas.DisplayInvoice, auth=AuthBearer())
 def delete_invoice_by_id(request, id: int):
     models.Invoice.objects.filter(pk=id).delete()
     return {204, None}
