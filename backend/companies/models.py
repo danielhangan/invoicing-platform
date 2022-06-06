@@ -16,5 +16,12 @@ class Company(models.Model):
     founded_on = models.DateField(null=True)
 
 
+class UserCompany(models.Model):
+    user_id = models.ForeignKey("users.User", on_delete=models.CASCADE, blank=False)
+    company_id = models.ForeignKey(
+        "companies.Company", on_delete=models.CASCADE, blank=False
+    )
+
+
 class CompanyTypes(models.Model):
     company_type_name = models.CharField(max_length=255, primary_key=True, blank=False)
