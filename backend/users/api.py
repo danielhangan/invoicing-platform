@@ -1,66 +1,57 @@
-from django.contrib.auth.hashers import make_password, check_password
+from re import U
 from ninja import Router, Schema
-from ninja.security import HttpBasicAuth
+from ninja.security import HttpBearer
+from ninja.errors import HttpError
 from datetime import date
 from .models import User
-from typing import List
+from typing import List, Optional
 
 router = Router(tags=["users"])
 
 
 class CreateUser(Schema):
     email: str
-    first_name: str
-    second_name: str
-    password: str
+    full_name: str
     created_at: date = date.today()
 
 
-class SmallUser(Schema):
+class UserDetails(Schema):
     email: str
-    first_name: str
-    second_name: str
-    created_at: date = date.today()
+    full_name: str
+    profession: Optional[str] = None
 
 
-class BigUser(Schema):
-    email: str
-    first_name: str
-    second_name: str
-    password: str
-    created_at: date = date.today()
+class AuthBearer(HttpBearer):
+    def authenticate(self, request, token):
+        if token == "supersecret":
+            return token
 
 
-class BasicAuth(HttpBasicAuth):
-    def authenticate(self, request, username, password):
-        user = User.objects.filter(pk=username).first()
-        if user and check_password(password, user.password):
-            return username
+@router.post("/profile/{email}", response=UserDetails)
+def get_user_profile(request, email: str):
+    user = User.objects.filter(pk=email).first()
+    if not user:
+        raise HttpError(
+            status_code=400, message=f"User with email {email} doesn't exist"
+        )
+    return user
 
 
-@router.post("/login", auth=BasicAuth())
-def login(request):
-    return {"status": 200}
-
-
-@router.get("/", response=List[BigUser])
+@router.get("/", response=List[UserDetails])
 def get_all_users(request):
     return User.objects.all()
 
 
-@router.post("/", auth=BasicAuth())
+@router.post("/")
 def create_user(request, payload: CreateUser):
-    payload.password = make_password(payload.password)
-    user = User.objects.create(**payload.dict())
-    return {"email": user.email}
+    check_user = User.objects.filter(pk=payload.email).first()
+    if not check_user:
+        user = User.objects.create(**payload.dict())
+        return {"email": user.email}
+    return {"email": check_user.email}
 
 
-@router.get("/{user_email}", response=BigUser, auth=BasicAuth())
-def get_user_by_email(request, user_email: str):
-    return User.objects.get(pk=user_email)
-
-
-@router.delete("/{user_email}", response={204: None}, auth=BasicAuth())
+@router.delete("/{user_email}", response={204: None}, auth=AuthBearer())
 def delete_user_by_email(request, user_email: str):
     User.objects.get(pk=user_email).delete()
     return 204, None

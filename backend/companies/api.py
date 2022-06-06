@@ -1,7 +1,7 @@
 from ninja import Router, Schema
 from ninja.errors import HttpError
 from typing import List, Optional
-from users.api import BasicAuth, SmallUser
+from users.api import AuthBearer, UserDetails
 from users.models import User
 from .models import Company
 
@@ -22,7 +22,7 @@ class CreateCompany(Schema):
 class DisplayCompany(Schema):
     name: str
     url: str
-    user: SmallUser
+    user: UserDetails
     address_street: str
     address_city: str
     address_country: str
@@ -39,7 +39,7 @@ class UpdateCompany(Schema):
     address_post_code: Optional[str]
 
 
-@router.post("/", auth=BasicAuth())
+@router.post("/", auth=AuthBearer())
 def create_company(request, payload: CreateCompany):
     user = User.objects.filter(pk=payload.user).first()
     if not user:
@@ -53,12 +53,12 @@ def create_company(request, payload: CreateCompany):
     return {"company": company.name}
 
 
-@router.get("/", response=List[DisplayCompany], auth=BasicAuth())
+@router.get("/", response=List[DisplayCompany], auth=AuthBearer())
 def get_all_companies(request):
     return Company.objects.all()
 
 
-@router.get("/{name}", response=DisplayCompany, auth=BasicAuth())
+@router.get("/{name}", response=DisplayCompany, auth=AuthBearer())
 def get_company_by_name(request, name: str):
     company = Company.objects.filter(name=name.lower()).first()
 
@@ -71,7 +71,7 @@ def get_company_by_name(request, name: str):
     return company
 
 
-@router.delete("/{name}", response={204: None}, auth=BasicAuth())
+@router.delete("/{name}", response={204: None}, auth=AuthBearer())
 def delete_company_by_name(request, name: str):
     Company.objects.filter(name=name.lower()).delete()
     return 204, None
