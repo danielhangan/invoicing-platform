@@ -1,9 +1,8 @@
-from pickle import FALSE
 from django.db import models
 
 # Create your models here.
 class Company(models.Model):
-    company_id = models.IntegerField(primary_key=True, null=False)
+    company_id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=255, blank=True)
     url = models.CharField(max_length=255, blank=False)
     user = models.ForeignKey("users.User", on_delete=models.CASCADE, blank=False)
