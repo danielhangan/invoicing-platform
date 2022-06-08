@@ -1,6 +1,4 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
 import theme from '../styles/theme'
 import { pageview } from '../lib/gtag'
 import { META } from '../config'
