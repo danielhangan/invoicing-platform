@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { Children, useState } from 'react'
 import {
     Grid,
     GridItem,
     Flex,
     IconButton,
-    Collapse,
-    Button,
+    HStack,
+    Icon,
     Text,
     Link as ChakraLink,
     useDisclosure,
@@ -13,23 +13,27 @@ import {
     DrawerOverlay,
     DrawerBody,
     DrawerHeader,
-    DrawerContent
+    DrawerContent,
+    useColorModeValue
 } from '@chakra-ui/react'
 import {
     FiMenu,
-    FiHome,
-    FiCopy,
-    FiSettings,
     FiGrid,
     FiLayers,
-    FiBriefcase
+    FiBriefcase,
+    FiHeart
 } from 'react-icons/fi'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import NavItem from '../components/SideBar/NavItem'
+import { ProfileMenu } from '../components/Header/ProfileMenu'
+import { ThemeToggler } from '../components/Header/ThemeToggler'
+import Link from 'next/link'
 
-export default function withSideBarLayout () {
+export default function DashboardLayout ({ children }) {
     const [navSize, changeNavSize] = useState("large")
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const sidebarbg = useColorModeValue('grey.100', 'grey.600')
     return (
     <Grid
         templateAreas={
@@ -40,32 +44,29 @@ export default function withSideBarLayout () {
         gridTemplateRows={'80px 1fr 40px'}
         gridTemplateColumns={['0 1fr', navSize =="small" ? "100px 1fr" : '300px 1fr']}
         transition="all 0.1s"
-        gap='1'
+        // gap='1'
         color='blackAlpha.700'
         minH="100vh"
         m={1}
     >
-        <GridItem bg='orange.300' ml={[12, 0]} w='auto' area={'header'}>
-            <Flex h="full" justifyContent='flex-end' alignItems='center'>
-                Header
-            </Flex>
+        <GridItem alignItems="right" ml={[12, 0]} w='auto' area={'header'} bg="grey.50">
+            <HStack justify="right" spacing={4} mr={4}>
+                <ProfileMenu />
+                <ThemeToggler />
+            </HStack>
         </GridItem>
         <GridItem 
             area={['header', 'nav']}
-            bg='grey.50' 
             w={navSize == "small" ? "100px" : ['10%', '100%']}
         >
         <Flex
-            boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-            rounded="sm"
+            boxShadow="2xl"
             flexDir="column"
+            pos="sticky"
             justifyContent="space-between"
-            bg="grey.100"
-            minH="auto"
-
+            minH="full"
         >
             <Flex
-                // pl="10px"
                 px={3}
                 flexDir="column"
                 h="100%"
@@ -92,7 +93,8 @@ export default function withSideBarLayout () {
             </Flex>
             <IconButton
                     aria-label="Open Menu"
-                    bg="grey.300"
+                    mt={4}
+                    color="gray.100"
                     icon={<HamburgerIcon />}
                     display={['flex', 'none', 'none', 'none']}
                     onClick={onOpen}
@@ -111,11 +113,17 @@ export default function withSideBarLayout () {
             </Drawer>
         </Flex>
         </GridItem>
-        <GridItem bg='green.300' area={'main'}>
-        Main
+        <GridItem area={'main'} bg="grey.50">
+            {children}
         </GridItem>
-        <GridItem bg='blue.300' area={'footer'}>
-        Footer
+        <GridItem area={'footer'} bg="grey.50">
+        <Flex flexDir="row" justify="center">
+                <Text>Built with</Text>
+                <Icon mx={1} color="grey.900" as={FiHeart} />
+                <ChakraLink href="https://github.com/danielhangan" isExternal>
+                    <Text>by Daniel Hangan</Text>
+                </ChakraLink>
+        </Flex>
         </GridItem>
     </Grid>
     )

@@ -1,9 +1,14 @@
 import React from 'react'
-// import LoginForm from '../components/Authentification/LoginForm'
-import Component from '../components/Authentification/Login'
+import { getProviders } from 'next-auth/react'
+import LoginProviders from '../components/Authentification/Login'
 
-export default function Login () {
-  return (
-    <Component />
-  )
+export default function Login ({ providers }) {
+    return (
+      <LoginProviders providers={providers} />
+    )
+}
+
+
+export async function getServerSideProps(ctx) {
+  return { props: { providers: await getProviders()}}
 }

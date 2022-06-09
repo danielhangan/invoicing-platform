@@ -1,7 +1,8 @@
+from datetime import datetime, date
 from ninja import Router, Schema
 from ninja.errors import HttpError
 from typing import List, Optional
-from users.api import AuthBearer, UserDetails
+from users.api import AuthBearer, DisplayUser
 from users.models import User
 from .models import Company
 
@@ -10,36 +11,45 @@ router = Router(tags=["companies"])
 
 
 class CreateCompany(Schema):
-    name: str
+    company_name: str
     url: str
     user: str
     address_street: str
     address_city: str
     address_country: str
     address_post_code: str
+    vat_number: str
+    tax_number: str
+    founded_on: date
 
 
 class DisplayCompany(Schema):
-    name: str
+    company_name: str
     url: str
-    user: UserDetails
+    user: str
     address_street: str
     address_city: str
     address_country: str
     address_post_code: str
+    vat_number: str
+    tax_number: str
+    founded_on: date
 
 
 class UpdateCompany(Schema):
-    name: Optional[str]
+    company_name: Optional[str]
     url: Optional[str]
     user: Optional[str]
     address_street: Optional[str]
     address_city: Optional[str]
     address_country: Optional[str]
     address_post_code: Optional[str]
+    vat_number: Optional[str]
+    tax_number: Optional[str]
+    founded_on: Optional[date]
 
 
-@router.post("/", auth=AuthBearer())
+@router.post("/")
 def create_company(request, payload: CreateCompany):
     user = User.objects.filter(pk=payload.user).first()
     if not user:
@@ -48,9 +58,8 @@ def create_company(request, payload: CreateCompany):
         )
 
     payload.user = user
-    payload.name = payload.name.lower()
     company = Company.objects.create(**payload.dict())
-    return {"company": company.name}
+    return {"company": company.company_name}
 
 
 @router.get("/", response=List[DisplayCompany], auth=AuthBearer())

@@ -3,11 +3,15 @@ import axios from 'axios'
 import {
     Box,
     Text,
-    Flex
+    Flex,
+    Spinner,
+    VStack
 } from '@chakra-ui/react'
 import { getSession } from "next-auth/react"
 import { useRouter } from 'next/router'
-import Sidebar from '../../layouts/withSideBarLayout'
+import { LoadingSpinner } from '../../components/Spinner'
+import DashboardLayout from '../../layouts/DashboardLayout'
+import { AccountSettings } from '../../components/User/AccountSettings'
 
 
 export default function Profile ({ user_profile }) {
@@ -24,11 +28,14 @@ export default function Profile ({ user_profile }) {
         }
       }, [user_profile])
     
+    console.log(user)
     return (
         <Box h="full">
-            {loading ? <>loading</> : 
+            {loading ? <LoadingSpinner />: 
             <Box h='full'>
-                <Sidebar />
+                <DashboardLayout>
+                    <AccountSettings user_data={user} />
+                </DashboardLayout>
             </Box>
             }
         </Box>

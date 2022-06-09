@@ -1,7 +1,7 @@
 from ninja import Schema
 from datetime import date, datetime
 from typing import List, Optional
-from users.api import UserDetails
+from users.api import DisplayUser
 from companies.api import DisplayCompany
 
 
@@ -42,7 +42,7 @@ class ShowCurrency(Schema):
 
 
 class DisplayInvoice(Schema):
-    user: UserDetails
+    user: DisplayUser
     issuer: DisplayCompany
     billed_to: DisplayCompany
     service_date_from: date
