@@ -5,7 +5,7 @@ import {
     Flex,
     IconButton,
     HStack,
-    Button,
+    Icon,
     Text,
     Link as ChakraLink,
     useDisclosure,
@@ -20,12 +20,14 @@ import {
     FiMenu,
     FiGrid,
     FiLayers,
-    FiBriefcase
+    FiBriefcase,
+    FiHeart
 } from 'react-icons/fi'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import NavItem from '../components/SideBar/NavItem'
 import { ProfileMenu } from '../components/Header/ProfileMenu'
 import { ThemeToggler } from '../components/Header/ThemeToggler'
+import Link from 'next/link'
 
 export default function DashboardLayout ({ children }) {
     const [navSize, changeNavSize] = useState("large")
@@ -42,12 +44,12 @@ export default function DashboardLayout ({ children }) {
         gridTemplateRows={'80px 1fr 40px'}
         gridTemplateColumns={['0 1fr', navSize =="small" ? "100px 1fr" : '300px 1fr']}
         transition="all 0.1s"
-        gap='1'
+        // gap='1'
         color='blackAlpha.700'
         minH="100vh"
         m={1}
     >
-        <GridItem alignItems="right" ml={[12, 0]} w='auto' area={'header'} bg={sidebarbg}>
+        <GridItem alignItems="right" ml={[12, 0]} w='auto' area={'header'} bg="grey.50">
             <HStack justify="right" spacing={4} mr={4}>
                 <ProfileMenu />
                 <ThemeToggler />
@@ -55,15 +57,14 @@ export default function DashboardLayout ({ children }) {
         </GridItem>
         <GridItem 
             area={['header', 'nav']}
-            rounded="lg"
             w={navSize == "small" ? "100px" : ['10%', '100%']}
         >
         <Flex
-            boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
-            rounded="lg"
+            boxShadow="2xl"
             flexDir="column"
+            pos="sticky"
             justifyContent="space-between"
-            minH="auto"
+            minH="full"
         >
             <Flex
                 px={3}
@@ -73,8 +74,6 @@ export default function DashboardLayout ({ children }) {
                 alignItems={navSize == "small" ? "center" : "flex-start"}
                 as="nav"
                 display={['none', 'flex', 'flex', 'flex']}
-                bg={sidebarbg}
-                rounded="lg"
             >
                 <IconButton
                     background="none"
@@ -114,11 +113,17 @@ export default function DashboardLayout ({ children }) {
             </Drawer>
         </Flex>
         </GridItem>
-        <GridItem area={'main'}>
+        <GridItem area={'main'} bg="grey.50">
             {children}
         </GridItem>
-        <GridItem area={'footer'}>
-        Footer
+        <GridItem area={'footer'} bg="grey.50">
+        <Flex flexDir="row" justify="center">
+                <Text>Built with</Text>
+                <Icon mx={1} color="grey.900" as={FiHeart} />
+                <ChakraLink href="https://github.com/danielhangan" isExternal>
+                    <Text>by Daniel Hangan</Text>
+                </ChakraLink>
+        </Flex>
         </GridItem>
     </Grid>
     )
