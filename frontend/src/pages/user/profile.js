@@ -8,7 +8,6 @@ import {
     VStack
 } from '@chakra-ui/react'
 import { getSession } from "next-auth/react"
-import { useRouter } from 'next/router'
 import { LoadingSpinner } from '../../components/Spinner'
 import DashboardLayout from '../../layouts/DashboardLayout'
 import { AccountSettings } from '../../components/User/AccountSettings'
@@ -17,28 +16,22 @@ import { AccountSettings } from '../../components/User/AccountSettings'
 export default function Profile ({ user_profile }) {
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState({})
-    const router = useRouter()
 
     useEffect(() => {
-        if (user_profile.email != "invalid") {
-            setLoading(false)
-            setUser(user_profile)
-        } else {
-            router.push("/login")
-        }
+        setLoading(false)
+        setUser(user_profile)
       }, [user_profile])
     
-    console.log(user)
     return (
+        <DashboardLayout>
         <Box h="full">
             {loading ? <LoadingSpinner />: 
             <Box h='full'>
-                <DashboardLayout>
                     <AccountSettings user_data={user} />
-                </DashboardLayout>
             </Box>
             }
         </Box>
+        </DashboardLayout>
     )
 }
 
