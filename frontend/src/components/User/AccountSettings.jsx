@@ -2,43 +2,26 @@ import React, { useState } from 'react'
 import {
     Flex,
     VStack,
-    Text,
     Button,
-    Box,
     Heading,
-    Icon,
     useColorModeValue,
-    Image,
-    Spacer,
-    HStack,
     Input,
-    InputLeftAddon,
-    InputGroup,
     Divider,
     FormControl,
     FormLabel,
     FormHelperText
 } from '@chakra-ui/react'
-import {
-    FiArrowLeft,
-    FiEdit,
-    FiSave
-} from 'react-icons/fi'
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 
 
 export const AccountSettings = ({ user_data }) => {
-    const { data: session } = useSession()
 
-    const textColorMode = useColorModeValue('grey.700', 'grey.200')
     return (
             <Flex my={4} mx={12} flexDir="column">
             
             <Heading size="xl">Personal Details</Heading>
             <Divider />
 
-            <VStack w="60%" p={12} mt={6} boxShadow="base" align="left" bg="white">
+            <VStack w={["100%", "80%", "60%"]} p={12} mt={6} boxShadow="base" align="left" bg="white">
                 <FormControl>
                     <FormLabel htmlFor='full-name'>Full Name</FormLabel>
                     <Input value={user_data.profile.full_name} id='full_name' type='text' />
