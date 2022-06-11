@@ -9,7 +9,7 @@ import NextChakraLink from "./nextChakraLink";
 
 export default function Footer() {
   return (
-        <Flex flexDir="row" justify="center">
+        <Flex flexDir="row" justify="center" mt={6} mb={2}>
                 <Text>Built with</Text>
                 <Icon mx={1} color="grey.900" as={FiHeart} />
                   <NextChakraLink href="https://github.com/danielhangan" isExternal>
