@@ -126,7 +126,7 @@ export const AccountSettings = ({ user_data }) => {
                     />
                 </FormControl>
                 <FormControl>
-                    <FormLabel htmlFor='company-url'>Company Name</FormLabel>
+                    <FormLabel htmlFor='company-name'>Company Name</FormLabel>
                     <Input 
                         value={company_name}
                         onChange={(e) => setCompany_name(e.target.value)}
@@ -228,7 +228,6 @@ export const AccountSettings = ({ user_data }) => {
                     </Flex>
                     :
                     <Flex w="100%" mt={4} justifyContent='space-between'>
-
                         <Button onClick={DeleteProfile} colorScheme="red">Delete</Button>
                         <Button onClick={SaveProfileChanges} colorScheme="blue">Save</Button>
                     </Flex>
