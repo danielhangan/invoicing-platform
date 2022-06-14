@@ -2,7 +2,7 @@ from ninja import Schema
 from datetime import date, datetime
 from typing import List, Optional
 from users.api import DisplayUser
-from companies.api import DisplayCompany
+from companies.schema import DisplayCompany
 
 
 class InvoiceStatus(Schema):

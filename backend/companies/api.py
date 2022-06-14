@@ -1,56 +1,18 @@
-from datetime import datetime, date
 from django.shortcuts import get_object_or_404
-from ninja import Router, Schema
+from ninja import Router
 from ninja.errors import HttpError
-from typing import List, Optional
-from users.api import AuthBearer, DisplayUser
+from typing import List
+from users.api import AuthBearer
 from users.models import User
 from .models import Company
+from . import schema
 
 
 router = Router(tags=["companies"])
 
 
-class CreateCompany(Schema):
-    company_name: Optional[str] = None
-    url: Optional[str] = None
-    user: str
-    address_street: Optional[str] = None
-    address_city: Optional[str] = None
-    address_country: Optional[str] = None
-    address_post_code: Optional[str] = None
-    vat_number: Optional[str] = None
-    tax_number: Optional[str] = None
-    founded_on: Optional[date] = None
-
-
-class DisplayCompany(Schema):
-    company_name: str
-    url: str
-    user: str
-    address_street: str
-    address_city: str
-    address_country: str
-    address_post_code: str
-    vat_number: str
-    tax_number: str
-    founded_on: date
-
-
-class UpdateCompany(Schema):
-    company_name: Optional[str]
-    url: Optional[str]
-    address_street: Optional[str]
-    address_city: Optional[str]
-    address_country: Optional[str]
-    address_post_code: Optional[str]
-    vat_number: Optional[str]
-    tax_number: Optional[str]
-    founded_on: Optional[date]
-
-
 @router.post("/")
-def create_company(request, payload: CreateCompany):
+def create_company(request, payload: schema.CreateCompany):
     user = User.objects.filter(pk=payload.user).first()
     if not user:
         raise HttpError(
@@ -62,13 +24,13 @@ def create_company(request, payload: CreateCompany):
     return {"company": company.company_name}
 
 
-@router.get("/", response=List[DisplayCompany], auth=AuthBearer())
-def get_all_companies(request):
-    return Company.objects.all()
+@router.get("/{email}", response=List[schema.DisplayCompany], auth=AuthBearer())
+def get_user_companies(request, email: str):
+    return Company.objects.filter(user__email=email, profile_company=False)
 
 
 @router.put("/{email}")
-def update_company(request, email: str, payload: UpdateCompany):
+def update_company(request, email: str, payload: schema.UpdateCompany):
     user = User.objects.get(pk=email)
     company = get_object_or_404(Company, user=user, profile_company=True)
     for attr, value in payload.dict().items():
@@ -78,7 +40,7 @@ def update_company(request, email: str, payload: UpdateCompany):
     return {"detail": "accepted"}
 
 
-@router.get("/{name}", response=DisplayCompany, auth=AuthBearer())
+@router.get("/{name}", response=schema.DisplayCompany, auth=AuthBearer())
 def get_company_by_name(request, name: str):
     company = Company.objects.filter(name=name.lower()).first()
 
@@ -91,7 +53,7 @@ def get_company_by_name(request, name: str):
     return company
 
 
-@router.delete("/{name}", response={204: None}, auth=AuthBearer())
-def delete_company_by_name(request, name: str):
-    Company.objects.filter(name=name.lower()).delete()
+@router.delete("/{email}/{name}", response={204: None}, auth=AuthBearer())
+def delete_company_by_name(request, email: str, name: str):
+    Company.objects.filter(user__email=email, company_name=name.lower()).delete()
     return 204, None

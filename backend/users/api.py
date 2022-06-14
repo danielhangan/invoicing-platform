@@ -57,8 +57,7 @@ def get_user_profile(request, email: str):
         raise HttpError(
             status_code=400, message=f"User with email {email} doesn't exist"
         )
-    user_company = Company.objects.filter(user=user.email).first()
-    print(user_company)
+    user_company = Company.objects.filter(user=user.email, profile_company=True).first()
     return {"profile": user, "company": user_company}
 
 
@@ -76,19 +75,23 @@ def get_all_users(request):
     return User.objects.all()
 
 
-@router.post("/")
+@router.post("/", auth=AuthBearer())
 def create_user(request, payload: CreateUser):
     check_user = User.objects.filter(pk=payload.email).first()
     if not check_user:
         user = User.objects.create(**payload.dict())
         user_company = Company.objects.filter(user__email=payload.email).first()
+        print(user_company)
         if not user_company:
-            new_company = Company.objects.create(user=user)
+            Company.objects.create(user=user, profile_company=True)
         return {"user": payload.email}
     return {"user": check_user.email}
 
 
-@router.delete("/{user_email}", response={204: None})
+@router.delete("/{user_email}", response={204: None}, auth=AuthBearer())
 def delete_user_by_email(request, user_email: str):
-    User.objects.get(pk=user_email).delete()
+    try:
+        User.objects.get(pk=user_email).delete()
+    except Exception as e:
+        print(e)
     return 204, None
