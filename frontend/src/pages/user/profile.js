@@ -52,37 +52,8 @@ export async function getServerSideProps(ctx) {
                 },
             }
         })
-        .catch(async (error) => {
-            if (error.response.data.detail === `User with email ${session?.user?.email} doesn't exist`) {
-                console.log("create user")
-                await axios.post(`${process.env.BASE_URL}/users/`, {
-                    email: session?.user?.email,
-                    full_name: session?.user?.name
-                }).then((res) => {
-                    const profile_payload = {
-                        profile: {
-                            email: session?.user?.email,
-                            full_name: session?.user?.name,
-                            profession: ""
-                        },
-                        company: {
-                            company_name: null,
-                            url: null,
-                            address_street: null,
-                            address_city: null,
-                            address_country: null,
-                            address_post_code: null,
-                            vat_number: null,
-                            tax_number: null,
-                            founded_on: null,
-                        }
-                    }
-                    user_profile = object.assign(profile_payload, user_profile)
-                }).catch((err) => {
-                    console.log(err)
-                    user_profile = Object.assign({email: "invalid"}, user_profile)
-                })
-            }
+        .catch((err) => {
+            console.log(err)
         })
     
     return {
