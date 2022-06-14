@@ -101,8 +101,8 @@ export default function DashboardLayout ({ children }) {
                     }}
                 />
                 <NavItem navSize={navSize} icon={FiGrid} redirect="/dashboard" title="Dashboard" />
-                <NavItem navSize={navSize} icon={FiLayers} redirect="/projects" title="Projects" />
-                <NavItem navSize={navSize} icon={FiBriefcase} redirect="/clients" title="Companies" />
+                {/* <NavItem navSize={navSize} icon={FiLayers} redirect="/projects" title="Projects" /> */}
+                <NavItem navSize={navSize} icon={FiBriefcase} redirect="/companies" title="Companies" />
             </Flex>
             <IconButton
                     aria-label="Open Menu"
