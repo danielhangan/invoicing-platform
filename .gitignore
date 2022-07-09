@@ -34,3 +34,8 @@ env
 .vercel
 
 parts
+
+# python cache
+__pycache__/
+*.py[cod]
+*$py.class
