@@ -5,7 +5,7 @@ import { InvoiceLayout } from '../../../layouts/InvoiceLayout'
 export default function EditInvoice ({ invoice_info }) {
 
   return (
-    <InvoiceLayout invoice_mode='edit' invoice_info={invoice_info} />
+    <InvoiceLayout invoice_mode='preview' invoice_info={invoice_info} />
   )
 }
 

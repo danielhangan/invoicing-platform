@@ -186,7 +186,8 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
         <Divider />
         <InvoiceItems view_mode={invoice_mode} />
       </GridItem>
-      <GridItem colSpan={1} w="100%" display='flex'>
+      {invoice_mode === 'edit' ?
+      <GridItem colSpan={1} w="100%">
         <Flex flexDir="column" w="100%">
         <Button colorScheme='blue' w="100%" size="sm" py={5}>
           <Icon mr={1} as={FiSend}/>
@@ -210,6 +211,15 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
         </Flex>
         </Flex>
       </GridItem>
+      :
+      <GridItem colSpan={1} w="100%">
+        <Flex flexDir="column" w="100%">
+          <Text>Pay with Paypal</Text>
+          <Text>Pay with Stripe</Text>
+          <Text>Pay with Revolut</Text>
+        </Flex>
+      </GridItem>
+      }
     </Grid>
     </Box>
     </InvoiceContext.Provider>
