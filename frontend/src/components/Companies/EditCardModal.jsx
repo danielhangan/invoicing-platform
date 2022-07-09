@@ -1,80 +1,91 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
-    Flex,
-    Box,
-    Button,
-    useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalBody,
-    ModalHeader,
-    ModalContent,
-    ModalFooter,
-    ModalCloseButton,
-    FormControl,
-    FormLabel,
-    Input,
-    FormHelperText,
-    Spinner
-
+  useDisclosure,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalHeader,
+  ModalCloseButton,
+  ModalFooter,
+  FormLabel,
+  FormControl,
+  FormHelperText,
+  Input,
+  Spinner,
 } from '@chakra-ui/react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
+export const EditCardModal = ({ company_info }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter()
+  const {data: session} = useSession()
 
-export const AddCompanyModal = () => {
-    const router = useRouter()
-    const {data: session} = useSession()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [company_name, setCompanyname] = useState('')
-    const [company_url, setCompanyurl] = useState('')
-    const [address_street, setAddress_street] = useState('')
-    const [address_city, setAddress_city] = useState('')
-    const [address_country, setAddress_country] = useState('')
-    const [address_post_code, setAddress_post_code] = useState('')
-    const [vat_number, setVat_number] = useState('')
-    const [tax_number, setTax_number] = useState('')
-    const [founded_on, setFounded_on] = useState(new Date().toISOString().split("T")[0])
-    const [submitCompany, setSubmitcompany] = useState(false)
+  const [company_id, setCompanyid] = useState(0)
+  const [company_name, setCompanyname] = useState('')
+  const [company_url, setCompanyurl] = useState('')
+  const [address_street, setAddress_street] = useState('')
+  const [address_city, setAddress_city] = useState('')
+  const [address_country, setAddress_country] = useState('')
+  const [address_post_code, setAddress_post_code] = useState('')
+  const [vat_number, setVat_number] = useState('')
+  const [tax_number, setTax_number] = useState('')
+  const [updatecompany, setUpdatecompany] = useState(false)
 
-    const SubmitNewCompany = async () => {
-        setSubmitcompany(true)
-        await fetch('/api/companies/' , {
-            method: "POST",
-            body: JSON.stringify({
-                company_name: company_name,
-                url: company_url,
-                user: session.user.email,
-                address_street: address_street,
-                address_city: address_city,
-                address_country: address_country,
-                address_post_code: address_post_code,
-                vat_number: vat_number,
-                tax_number: tax_number,
-                founded_on: founded_on,
-                profile_company: false
-            })
-        })
-        .then((data) => {
-            setSubmitcompany(false)
-            onClose()
-            router.replace(router.asPath)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }
+  useEffect(() => {
+      setCompanyid(company_info.company_id)
+      setCompanyname(company_info.company_name)
+      setCompanyurl(company_info.url)
+      setAddress_street(company_info.address_street)
+      setAddress_city(company_info.address_city)
+      setAddress_country(company_info.address_country)
+      setAddress_post_code(company_info.address_post_code)
+      setVat_number(company_info.vat_number)
+      setTax_number(company_info.tax_number)
+  }, [company_info])
 
+  const SubmitCompanyUpdate = async () => {
+      setUpdatecompany(true)
+      await fetch(`/api/companies/update/` , {
+          method: "PUT",
+          body: JSON.stringify({
+              user_email: session?.user?.email,
+              company_id: company_id,
+              company_name: company_name,
+              url: company_url,
+              address_street: address_street,
+              address_city: address_city,
+              address_country: address_country,
+              address_post_code: address_post_code,
+              vat_number: vat_number,
+              tax_number: tax_number,
+          })
+      })
+      .then((data) => {
+        setTimeout(() => {
+          setUpdatecompany(false)
+        }, 2000)
+        onClose()
+        router.replace(router.asPath)
+      })
+      .catch((err) => {
+          console.log(err)
+      })
+  }
+  return (
+    <>
+      <Button size="sm" colorScheme="blue" onClick={onOpen}>Edit</Button>
 
-    return (
-      <>
-        <Button colorScheme='teal' size='sm' onClick={onOpen}>New Company</Button>
-  
-        <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create company</ModalHeader>
-            <ModalCloseButton />
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
             <ModalBody pb={6}>
                 <FormControl>
                     <FormLabel htmlFor='company_name'>Company Name</FormLabel>
@@ -159,29 +170,19 @@ export const AddCompanyModal = () => {
                     />
                     <FormHelperText>You business unique TAX number.</FormHelperText>
                 </FormControl>
-                <FormControl mb={4} mt={4}>
-                    <FormLabel htmlFor='founded_on'>Founded On</FormLabel>
-                    <Input 
-                        value={founded_on}
-                        onChange={(e) => setFounded_on(e.target.value)}
-                        id='founded_on'
-                        type='date'
-                        placeholder='2022-01-01'
-                    />
-                    <FormHelperText>Business incorporation date.</FormHelperText>
-                </FormControl>
             </ModalBody>
-  
-            <ModalFooter>
-                {submitCompany ? 
-                    <Button disabled="True" colorScheme="blue"><Spinner size='sm' mr={3}/> Submit</Button>
-                    :
-                    <Button onClick={SubmitNewCompany} colorScheme="blue">Submit</Button>
-                }
-              <Button ml={3} onClick={onClose}>Cancel</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    )
-  }
+
+          <ModalFooter>
+
+              {updatecompany ? 
+              <Button disabled="True" size="sm" colorScheme="red"><Spinner size='sm' mr={3}/>Save</Button>
+              :
+              <Button onClick={SubmitCompanyUpdate} size="sm" colorScheme="red">Save</Button>
+              }
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}

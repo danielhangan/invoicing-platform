@@ -25,13 +25,13 @@ export default function Companies ({ companies }) {
         )
     }
 
-    console.log(user_companies)
     return (
         <CompaniesLayout>
             {
                 Object.keys(user_companies).length < 1 ? 
-                <Flex>
-                    <Text>Add Company</Text>
+                <Flex flexDir="column" maxW="15vh" my={4} mx={12}>
+                    <AddCompanyModal />
+                    <Text mt={4}>Add Your First Company</Text>
                 </Flex>
                 :
                 <Flex flexDir="column" my={4} mx={12}>

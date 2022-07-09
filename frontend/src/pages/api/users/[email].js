@@ -27,7 +27,7 @@ export default async function delete_user(req, res) {
             },
         })
         .then(async(res_profile) => {
-            await axios.put(`${process.env.BASE_URL}/companies/${user_email}`, company,
+            await axios.put(`${process.env.BASE_URL}/companies/profile/${user_email}`, company,
               {
                   headers: {
                       Authorization: `Bearer ${process.env.AUTH_SECRET}`

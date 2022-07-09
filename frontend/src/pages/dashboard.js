@@ -1,15 +1,32 @@
 import React from 'react'
-import DashboardLayout from '../layouts/DashboardLayout'
+import {
+  Button,
+  Flex,
+  Text,
+} from '@chakra-ui/react'
+import { InvoicesTableLayout } from '../layouts/InvoicesTableLayout'
 import { getSession } from 'next-auth/react'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 export default function Dashboard ({ user_data }) {
+  const router = useRouter()
+  
+  const CreateNewInvoice = async () => {
+    const new_invoice = await fetch("/api/invoices/create/", {
+      method: 'POST',
+      body: JSON.stringify({
+        created_by_user: user_data.profile.email
+      })
+    }).then((data) => {
+      console.log(data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   return (
-      <DashboardLayout>
-        <h1>{user_data.profile.full_name}</h1>
-        <div>dashboard</div>
-      </DashboardLayout>
-      
+      <InvoicesTableLayout user_data={user_data} />
   )
 }
 
@@ -47,6 +64,12 @@ export async function getServerSideProps (ctx) {
 
         if (res.status === 200) {
           Object.assign(user_data, await res.json())
+          await axios.get(`${process.env.BASE_URL}/invoices/${session?.user?.email}`, {
+            headers: {
+                Authorization: `Bearer ${process.env.AUTH_SECRET}`
+            }
+          }
+          ).then((data) => user_data['invoices'] = data.data)
         }
       })
       .catch((err) => {
