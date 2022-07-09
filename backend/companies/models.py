@@ -12,15 +12,6 @@ class Company(models.Model):
     address_post_code = models.CharField(max_length=100, null=True, blank=True)
     vat_number = models.CharField(max_length=255, null=True, blank=True)
     tax_number = models.CharField(max_length=255, null=True, blank=True)
-    founded_on = models.DateField(null=True)
-    profile_company = models.BooleanField()
-
-
-class UserCompany(models.Model):
-    user_id = models.ForeignKey("users.User", on_delete=models.CASCADE, blank=False)
-    company_id = models.ForeignKey(
-        "companies.Company", on_delete=models.CASCADE, blank=False
-    )
 
 
 class CompanyTypes(models.Model):

@@ -3,7 +3,7 @@ from ninja import Router, Schema
 from ninja.security import HttpBearer
 from ninja.errors import HttpError
 from datetime import date
-from .models import User
+from .models import User, UserCompany
 from companies.models import Company
 from typing import List, Optional
 
@@ -36,7 +36,6 @@ class DisplayCompany(Schema):
     address_post_code: str = None
     vat_number: str = None
     tax_number: str = None
-    founded_on: date = None
 
 
 class UserProfile(Schema):
@@ -57,7 +56,7 @@ def get_user_profile(request, email: str):
         raise HttpError(
             status_code=400, message=f"User with email {email} doesn't exist"
         )
-    user_company = Company.objects.filter(user=user.email, profile_company=True).first()
+    user_company = UserCompany.objects.filter(user=user.email).first()
     return {"profile": user, "company": user_company}
 
 
@@ -80,10 +79,9 @@ def create_user(request, payload: CreateUser):
     check_user = User.objects.filter(pk=payload.email).first()
     if not check_user:
         user = User.objects.create(**payload.dict())
-        user_company = Company.objects.filter(user__email=payload.email).first()
-        print(user_company)
+        user_company = UserCompany.objects.filter(user__email=payload.email).first()
         if not user_company:
-            Company.objects.create(user=user, profile_company=True)
+            UserCompany.objects.create(user=user)
         return {"user": payload.email}
     return {"user": check_user.email}
 

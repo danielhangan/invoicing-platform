@@ -18,8 +18,6 @@ class CreateCompany(Schema):
     address_post_code: Optional[str] = None
     vat_number: Optional[str] = None
     tax_number: Optional[str] = None
-    founded_on: Optional[date] = None
-    profile_company: Optional[bool] = False
 
 
 class DisplayCompany(Schema):
@@ -33,8 +31,6 @@ class DisplayCompany(Schema):
     address_post_code: Optional[str] = None
     vat_number: Optional[str] = None
     tax_number: Optional[str] = None
-    founded_on: Optional[date] = None
-    profile_company: bool
 
 
 class UpdateCompany(Schema):
@@ -46,4 +42,3 @@ class UpdateCompany(Schema):
     address_post_code: Optional[str]
     vat_number: Optional[str]
     tax_number: Optional[str]
-    founded_on: Optional[date]
