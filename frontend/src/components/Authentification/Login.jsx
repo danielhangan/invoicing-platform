@@ -15,7 +15,7 @@ export default function LoginProviders({ providers }) {
   const router = useRouter()
 
   if (session) {
-    router.push("/user/profile")
+    router.push("/dashboard")
   }
   return (
     <Flex

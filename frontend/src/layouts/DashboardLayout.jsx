@@ -27,13 +27,27 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import NavItem from '../components/SideBar/NavItem'
 import { ProfileMenu } from '../components/Header/ProfileMenu'
 import { ThemeToggler } from '../components/Header/ThemeToggler'
-import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { LoadingSpinner } from '../components/Spinner'
+import Footer from '../components/Footer'
 
 export default function DashboardLayout ({ children }) {
+    const router = useRouter()
+    const { status } = useSession({
+        required: true,
+        onUnauthenticated() {
+            router.push("/login")
+        }
+    })
     const [navSize, changeNavSize] = useState("large")
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const bgcolor = useColorModeValue("grey.50", "grey.50")
 
-    const sidebarbg = useColorModeValue('grey.100', 'grey.600')
+    if (status === 'loading') {
+        return <LoadingSpinner />
+    }
+
     return (
     <Grid
         templateAreas={
@@ -42,35 +56,34 @@ export default function DashboardLayout ({ children }) {
             "nav footer"`
         }
         gridTemplateRows={'80px 1fr 40px'}
-        gridTemplateColumns={['0 1fr', navSize =="small" ? "100px 1fr" : '300px 1fr']}
+        gridTemplateColumns={['0 1fr', navSize === "small" ? "100px 1fr" : "200px 1fr", navSize =="small" ? "100px 1fr" : '300px 1fr']}
         transition="all 0.1s"
-        // gap='1'
-        color='blackAlpha.700'
         minH="100vh"
         m={1}
     >
-        <GridItem alignItems="right" ml={[12, 0]} w='auto' area={'header'} bg="grey.50">
-            <HStack justify="right" spacing={4} mr={4}>
-                <ProfileMenu />
-                <ThemeToggler />
+        <GridItem alignItems="right" ml={[12, 0]} area={'header'} bg="grey.50">
+            <HStack justify="flex-end" w="-moz-available" position="fixed" spacing={4} mr={4}>
+                    <ProfileMenu />
+                    <ThemeToggler />
             </HStack>
         </GridItem>
         <GridItem 
             area={['header', 'nav']}
-            w={navSize == "small" ? "100px" : ['10%', '100%']}
+            w={navSize == "small" ? "10px" : ["100px", "200px", "300px"]}
+            bg={bgcolor}
         >
         <Flex
-            boxShadow="2xl"
             flexDir="column"
-            pos="sticky"
+            position="fixed"
             justifyContent="space-between"
+            // minH={["10px","full"]}
             minH="full"
+            w={["10px", navSize === "small" ? "100px" : ["100px", "200px", "300px"]]}
+            boxShadow={["", "2xl"]}
         >
             <Flex
                 px={3}
                 flexDir="column"
-                h="100%"
-                minH="100vh"
                 alignItems={navSize == "small" ? "center" : "flex-start"}
                 as="nav"
                 display={['none', 'flex', 'flex', 'flex']}
@@ -87,14 +100,16 @@ export default function DashboardLayout ({ children }) {
                             changeNavSize("small")
                     }}
                 />
-                <NavItem navSize={navSize} icon={FiGrid} title="Dashboard" />
-                <NavItem navSize={navSize} icon={FiLayers} title="Projects" />
-                <NavItem navSize={navSize} icon={FiBriefcase} title="Companies" />
+                <NavItem navSize={navSize} icon={FiGrid} redirect="/dashboard" title="Dashboard" />
+                {/* <NavItem navSize={navSize} icon={FiLayers} redirect="/projects" title="Projects" /> */}
+                <NavItem navSize={navSize} icon={FiBriefcase} redirect="/companies" title="Companies" />
             </Flex>
             <IconButton
                     aria-label="Open Menu"
                     mt={4}
-                    color="gray.100"
+                    ml={4}
+                    size="md"
+                    color="gray.500"
                     icon={<HamburgerIcon />}
                     display={['flex', 'none', 'none', 'none']}
                     onClick={onOpen}
@@ -117,13 +132,7 @@ export default function DashboardLayout ({ children }) {
             {children}
         </GridItem>
         <GridItem area={'footer'} bg="grey.50">
-        <Flex flexDir="row" justify="center">
-                <Text>Built with</Text>
-                <Icon mx={1} color="grey.900" as={FiHeart} />
-                <ChakraLink href="https://github.com/danielhangan" isExternal>
-                    <Text>by Daniel Hangan</Text>
-                </ChakraLink>
-        </Flex>
+            <Footer />
         </GridItem>
     </Grid>
     )

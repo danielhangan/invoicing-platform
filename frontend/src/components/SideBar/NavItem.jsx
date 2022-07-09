@@ -9,7 +9,7 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 
-export default function NavItem({ icon, title, active, navSize }) {
+export default function NavItem({ icon, title, redirect, active, navSize }) {
     const textColorMode = useColorModeValue('grey.700', 'grey.200')
     return (
         <Flex
@@ -30,6 +30,7 @@ export default function NavItem({ icon, title, active, navSize }) {
                     w={navSize == "large" && "100%"}
                     alignItems='center'
                     display='flex'
+                    href={redirect}
                 >
                     <MenuButton w="100%" alignItems='center'>
                         <Flex alignItems='center'>

@@ -7,8 +7,10 @@ import {
     MenuGroup,
     MenuDivider,
     Button,
+    Link
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { signOut } from 'next-auth/react'
 
 export const ProfileMenu = () => {
     const router = useRouter()
@@ -20,13 +22,16 @@ export const ProfileMenu = () => {
             </MenuButton>
             <MenuList>
                 <MenuGroup title='Profile'>
-                <MenuItem onClick={() => router.push("/user")}>My Account</MenuItem>
-                <MenuItem>Dashboard</MenuItem>
+                    <MenuItem onClick={() => router.push("/user/profile")}>My Account</MenuItem>
+                    <MenuItem onClick={() => router.push("/dashboard")}>Dashboard</MenuItem>
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup title='Help'>
-                <MenuItem>Docs</MenuItem>
-                <MenuItem>FAQ</MenuItem>
+                {/* <MenuItem>Docs</MenuItem>
+                <MenuItem>FAQ</MenuItem> */}
+                <MenuItem onClick={() => signOut()}>
+                    Logout
+                </MenuItem>
                 </MenuGroup>
             </MenuList>
         </Menu>
