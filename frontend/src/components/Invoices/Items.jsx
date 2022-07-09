@@ -17,7 +17,7 @@ import {
  } from '@chakra-ui/react'
 import React, { useContext, useState, useEffect } from 'react'
 import { FiTrash2 } from 'react-icons/fi'
-import { InvoiceContext } from '../../pages/invoices/edit/[id]'
+import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
 export const InvoiceItems = () => {
     const {

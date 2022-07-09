@@ -9,7 +9,7 @@ import {
     InputGroup,
     InputLeftAddon
 } from '@chakra-ui/react'
-import { InvoiceContext } from '../../pages/invoices/edit/[id]'
+import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
 const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <Input 
