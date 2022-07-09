@@ -11,7 +11,7 @@ import {
     Input,
     Button
 } from '@chakra-ui/react'
-import { InvoiceContext } from '../../pages/invoices/edit/[id]'
+import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
 export const ServiceDateRangePicker = () => {
     const { servicedate, setServicedate } = useContext(InvoiceContext)

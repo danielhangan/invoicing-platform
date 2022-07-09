@@ -17,7 +17,7 @@ import {
     VStack,
     Spinner
 } from '@chakra-ui/react'
-import { InvoiceContext } from '../../pages/invoices/edit/[id]'
+import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
 export const IssuerAddress = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
