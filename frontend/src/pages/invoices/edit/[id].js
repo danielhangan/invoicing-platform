@@ -29,6 +29,7 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const res = await fetch('http://localhost:3000/api/invoices/',{method: "GET"})
   const invoices = await res.json()
+  // comment
 
   const paths = invoices.map((invoice) => ({
     params: { id: invoice.invoice_id.toString() }
