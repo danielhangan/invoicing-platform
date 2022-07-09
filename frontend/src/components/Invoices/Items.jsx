@@ -19,7 +19,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { FiTrash2 } from 'react-icons/fi'
 import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
-export const InvoiceItems = () => {
+export const InvoiceItems = ({ view_mode }) => {
     const {
         items,
         setItems,
@@ -89,10 +89,11 @@ export const InvoiceItems = () => {
                 </Tr>
 
             </Thead>
+            {view_mode === 'edit' ?
             <Tbody>
                 {items.map((item, index) => (
                 <Tr key={index}>
-                    <Th maxW={12}>
+                    <Th w="50%">
                         <Input
                             value={item.description}
                             onChange={(e) => OnTableElementChange(e, index)}
@@ -103,7 +104,7 @@ export const InvoiceItems = () => {
                             rounded="sm"
                         />
                     </Th>
-                    <Th maxW={6}>
+                    <Td>
                         <Input
                             value={item.quantity}
                             onChange={(e) => OnTableElementChange(e, index)}
@@ -113,8 +114,8 @@ export const InvoiceItems = () => {
                             placeholder='1'
                             rounded="sm"
                         />
-                    </Th>
-                    <Td maxW={6}>
+                    </Td>
+                    <Td>
                         <Input
                             value={item.price}
                             onChange={(e) => OnTableElementChange(e, index)}
@@ -125,10 +126,10 @@ export const InvoiceItems = () => {
                             rounded="sm"
                         />
                     </Td>
-                    <Td maxW={6} textAlign="right" isNumeric>
+                    <Td textAlign="right" isNumeric>
                         <Text>$ {item.quantity * item.price}</Text>
                     </Td>
-                    <Th maxW={2} textAlign="center">
+                    <Th textAlign="center">
                         <Icon 
                             as={FiTrash2} 
                             w={4} 
@@ -139,13 +140,39 @@ export const InvoiceItems = () => {
                     </Th>
                 </Tr>
                 ))}
+            </Tbody>
+            :
+            <Tbody>
+                {items.map((item, index) => (
+                <Tr key={index}>
+                    <Th w="50%">
+                        <Text>{item.description}</Text>
+                    </Th>
+                    <Td>
+                        {item.quantity}
+                    </Td>
+                    <Td>
+                        {item.price}
+                    </Td>
+                    <Td textAlign="right" isNumeric>
+                        <Text>$ {item.quantity * item.price}</Text>
+                    </Td>
+                </Tr>
+                ))}
 
             </Tbody>
+            
+            }
         </Table>
         <Flex flexDir="row" w="100%">
+        {view_mode === 'edit' ?
         <Flex ml={4} w="50%">
             <Link textColor="blue.600" onClick={() => AddNewInvoiceItem()}>Add Item</Link>
         </Flex>
+        :
+        <Flex ml={4} w="50%">
+        </Flex>
+        }
         <Flex w="50%" justifyContent="right" gap={2}>
             <VStack w="100%" alignItems="flex-end">
             <Flex w="70%" justifyContent="space-between" pr={4} gap={1}>
@@ -153,7 +180,11 @@ export const InvoiceItems = () => {
                 <Text>$ {subtotal}</Text>
             </Flex>
             <Flex w="70%" justifyContent="space-between" alignItems="center" pr={4}>
+                {view_mode === 'edit' ? 
                 <Link textColor="blue.600" onClick={() => setEditvatrate(true)}>Add tax</Link>
+                :
+                <Text fontWeight="semibold">VAT</Text>
+                }
                 {editvatrate ? 
                 <Input
                     w="20%"

@@ -53,6 +53,7 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
   const [vatrate, setVatrate] = useState(0)
 
   useEffect(() => {
+    setServicedate([new Date(invoice_info.data.service_date_from), new Date(invoice_info.data.service_date_to)])
     setDuedate(new Date(invoice_info.data.due_date))
     setInvoice_id(invoice_info.data.invoice_id)
     setInvoicecode(invoice_info.data.invoice_code)
@@ -129,8 +130,6 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
       vatrate,
       setVatrate
     }}>
-    {invoice_mode === 'edit' ? 
-    // Invoice Edit Mode
     <Box bg="grey.100">
     <Box p={4}>
       <Icon 
@@ -149,6 +148,8 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
             <Icon w={12} h={12} color="grey.500" boxShadow="lg" p={2} mt={0} rounded="xl" as={FiUpload} />
             <Flex flexDir="row" fontSize="2xl" fontWeight="semibold" alignItems="center" justifyContent="center">
               <Text>Invoice #</Text>
+              {invoice_mode === 'edit' ?
+              <>
               {editInvoiceCode ? 
               <Input 
                 value={invoicecode}
@@ -165,23 +166,28 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
               :
               <Text onClick={() => setEditInvoiceCode(true)} color="grey.400">{invoicecode ? invoicecode : setInvoicecode("001")}</Text>
             }
+              </>
+              :
+              <Text color="grey.400">{invoicecode}</Text>
+            }
             </Flex>
           </Flex>
-          <DueDatePicker />
+          <DueDatePicker view_mode={invoice_mode} />
         </Flex>
         <Divider />
         <Grid templateColumns='repeat(2, 1fr)' minH="30vh" gap={6} mt={8} mb={4}>
           <GridItem colSpan={1} h="100%">
-            <IssuerAddress />
+            <IssuerAddress view_mode={invoice_mode} />
           </GridItem>
           <GridItem colSpan={1}>
-            <BilledAddress />
+            <BilledAddress view_mode={invoice_mode} />
           </GridItem>
         </Grid>
         <Divider />
-        <InvoiceItems />
+        <InvoiceItems view_mode={invoice_mode} />
       </GridItem>
-      <GridItem colSpan={1} w="70%">
+      <GridItem colSpan={1} w="100%" display='flex'>
+        <Flex flexDir="column" w="100%">
         <Button colorScheme='blue' w="100%" size="sm" py={5}>
           <Icon mr={1} as={FiSend}/>
           Send Invoice
@@ -202,17 +208,10 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
             </MenuList>
           </Menu>
         </Flex>
+        </Flex>
       </GridItem>
     </Grid>
     </Box>
-
-    :
-
-    // Invoice Preview Mode
-    <Box>
-      Invoice preview mode
-    </Box>
-  }
     </InvoiceContext.Provider>
   )
 }

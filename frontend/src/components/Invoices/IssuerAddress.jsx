@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react'
 import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
-export const IssuerAddress = () => {
+export const IssuerAddress = ({ view_mode }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const {
       issuer_address_city,
@@ -69,6 +69,8 @@ export const IssuerAddress = () => {
     }
 
     return (
+        <>
+        {view_mode === 'edit' ?
         <Flex h="100%" flexDir="column" gap={6}>
         <Input 
             bg={issuer_email ? 'white' : 'grey.100'}
@@ -107,6 +109,29 @@ export const IssuerAddress = () => {
                 <Text fontWeight="normal">{issuer_tax_number}</Text>
             </Flex>
         </Button>
+        </Flex>
+        :
+        <Flex h="100%" flexDir="column" gap={6} p={4}>
+        <Text>{issuer_email}</Text>
+
+        <Flex flexDir="column" gap={2} textAlign="left">
+            <Text as="h1" fontSize="2xl">{issuer_company_name}</Text>
+            <Text fontWeight="normal">{issuer_address_street}</Text>
+            <Flex>
+                <Text fontWeight="normal">{issuer_address_country}</Text>
+                {issuer_address_city ? 
+                    <Text fontWeight="normal">, {issuer_address_city}</Text>
+                    :
+                    <Text></Text>
+                }
+            </Flex>
+            <Text fontWeight="normal">{issuer_address_post_code}</Text>
+            <Text fontWeight="normal">{issuer_vat_number}</Text>
+            <Text fontWeight="normal">{issuer_tax_number}</Text>
+        </Flex>
+        </Flex>
+        
+        }
     
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
@@ -197,6 +222,6 @@ export const IssuerAddress = () => {
             </ModalFooter>
             </ModalContent>
         </Modal>
-        </Flex>
+        </>
     )
 }

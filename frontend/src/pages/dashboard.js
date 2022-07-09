@@ -13,7 +13,7 @@ export default function Dashboard ({ user_data }) {
   const router = useRouter()
   
   const CreateNewInvoice = async () => {
-    const new_invoice = await fetch("/api/invoices/create/", {
+    await fetch("/api/invoices/create/", {
       method: 'POST',
       body: JSON.stringify({
         created_by_user: user_data.profile.email
@@ -37,7 +37,6 @@ export async function getServerSideProps (ctx) {
     const user_data = {}
     await fetch(`http://localhost:3000/api/users/register/${session?.user?.email}`)
       .then(async (res) => {
-
         // Creating new User
         if (res.status === 400) {
           const new_user = axios.post(`${process.env.BASE_URL}/users/`, 
@@ -64,7 +63,7 @@ export async function getServerSideProps (ctx) {
 
         if (res.status === 200) {
           Object.assign(user_data, await res.json())
-          await axios.get(`${process.env.BASE_URL}/invoices/${session?.user?.email}`, {
+          await axios.get(`${process.env.BASE_URL}/invoices/user/${session?.user?.email}`, {
             headers: {
                 Authorization: `Bearer ${process.env.AUTH_SECRET}`
             }
@@ -73,7 +72,7 @@ export async function getServerSideProps (ctx) {
         }
       })
       .catch((err) => {
-        console.log("err in /dashboard ssr", err)
+        console.log("err in /dashboard ssr", err.response.status)
       })
 
   return {

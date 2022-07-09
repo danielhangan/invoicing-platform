@@ -9,11 +9,12 @@ import {
     InputGroup,
     InputRightElement,
     Input,
-    Button
+    Button,
+    Text
 } from '@chakra-ui/react'
 import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
-export const ServiceDateRangePicker = () => {
+export const ServiceDateRangePicker = ({ view_mode }) => {
     const { servicedate, setServicedate } = useContext(InvoiceContext)
     const [startDate, endDate] = servicedate
 
@@ -31,6 +32,7 @@ export const ServiceDateRangePicker = () => {
     ))
     return (
         <Flex>
+        {view_mode === 'edit' ? 
         <FormControl isRequired>
             <InputGroup size="sm" alignItems="center" gap={2}>
             <InputLeftAddon size="sm" bg="white" p={1} children="Service Date:" rounded="lg" border='none' />
@@ -45,6 +47,16 @@ export const ServiceDateRangePicker = () => {
                 />
             </InputGroup>
         </FormControl>
+        :
+        <Flex flexDir="row" gap={2}>
+            <Text fontWeight="semibold">Service Date:</Text>
+            {startDate && endDate ?
+            <Text>{startDate.toISOString().split("T")[0]} - {endDate.toISOString().split("T")[0]}</Text>
+            :
+            <Text></Text>
+            }
+        </Flex>
+        }
         </Flex>
     );
 }

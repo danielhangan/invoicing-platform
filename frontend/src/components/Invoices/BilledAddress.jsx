@@ -15,11 +15,12 @@ import {
     FormControl,
     FormLabel,
     VStack,
-    Spinner
+    Spinner,
+    Box
 } from '@chakra-ui/react'
-import { InvoiceContext } from '../../pages/invoices/edit/[id]'
+import { InvoiceContext } from '../../layouts/InvoiceLayout'
 
-export const BilledAddress = () => {
+export const BilledAddress = ({ view_mode }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const {
       billed_address_city,
@@ -68,45 +69,68 @@ export const BilledAddress = () => {
     }
 
     return (
+        <>
+        {view_mode === 'edit' ?
         <Flex h="100%" flexDir="column" gap={6}>
-        <Input 
-            bg={billed_email ? 'white' : 'grey.100'}
-            border={0}
-            size="lg"
-            placeholder="example@gmail.com"
-            fontSize="sm"
-            value={billed_email}
-            onChange={(e) => setBilled_email(e.target.value)}
-        />
-
-        <Button 
-            w="100%"
-            h="100%"
-            onClick={onOpen}
-            justifyContent="flex-start"
-            alignItems="start"
-            p={6}
-            bg={billed_company_name || billed_address_country ? 'white' : 'grey.100'}
-            fontSize="sm"
-            size="sm"
-        >
-            <Flex flexDir="column" gap={2} textAlign="left">
-                <Text as="h1" fontSize="2xl">{billed_company_name}</Text>
-                <Text fontWeight="normal">{billed_address_street}</Text>
-                <Flex>
-                    <Text fontWeight="normal">{billed_address_country}</Text>
-                    {billed_address_city ? 
-                        <Text fontWeight="normal">, {billed_address_city}</Text>
-                        :
-                        <Text></Text>
-                    }
+            <Input 
+                bg={billed_email ? 'white' : 'grey.100'}
+                border={0}
+                size="lg"
+                placeholder="example@gmail.com"
+                fontSize="sm"
+                value={billed_email}
+                onChange={(e) => setBilled_email(e.target.value)}
+            />
+            <Button 
+                w="100%"
+                h="100%"
+                onClick={onOpen}
+                justifyContent="flex-start"
+                alignItems="start"
+                p={6}
+                bg={billed_company_name || billed_address_country ? 'white' : 'grey.100'}
+                fontSize="sm"
+                size="sm"
+            >
+                <Flex flexDir="column" gap={2} textAlign="left">
+                    <Text as="h1" fontSize="2xl">{billed_company_name}</Text>
+                    <Text fontWeight="normal">{billed_address_street}</Text>
+                    <Flex>
+                        <Text fontWeight="normal">{billed_address_country}</Text>
+                        {billed_address_city ? 
+                            <Text fontWeight="normal">, {billed_address_city}</Text>
+                            :
+                            <Text></Text>
+                        }
+                    </Flex>
+                    <Text fontWeight="normal">{billed_address_post_code}</Text>
+                    <Text fontWeight="normal">{billed_vat_number}</Text>
+                    <Text fontWeight="normal">{billed_tax_number}</Text>
                 </Flex>
-                <Text fontWeight="normal">{billed_address_post_code}</Text>
-                <Text fontWeight="normal">{billed_vat_number}</Text>
-                <Text fontWeight="normal">{billed_tax_number}</Text>
+            </Button>
             </Flex>
-        </Button>
-    
+            :
+            <Flex h="100%" flexDir="column" gap={6} p={1}>
+                <Text>{billed_email}</Text>
+                <Flex flexDir="column" gap={2} textAlign="left">
+                    <Text as="h1" fontSize="2xl">{billed_company_name}</Text>
+                    <Text fontWeight="normal">{billed_address_street}</Text>
+                    <Flex>
+                        <Text fontWeight="normal">{billed_address_country}</Text>
+                        {billed_address_city ? 
+                            <Text fontWeight="normal">, {billed_address_city}</Text>
+                            :
+                            <Text></Text>
+                        }
+                    </Flex>
+                    <Text fontWeight="normal">{billed_address_post_code}</Text>
+                    <Text fontWeight="normal">{billed_vat_number}</Text>
+                    <Text fontWeight="normal">{billed_tax_number}</Text>
+                </Flex>
+                </Flex>
+
+        }
+
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
             <ModalContent>
@@ -196,7 +220,7 @@ export const BilledAddress = () => {
             </ModalFooter>
             </ModalContent>
         </Modal>
-        </Flex>
+        </>
     )
 }
 
