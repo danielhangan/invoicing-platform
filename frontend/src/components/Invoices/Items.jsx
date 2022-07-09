@@ -75,8 +75,7 @@ export const InvoiceItems = () => {
     useEffect(() => {
         const total_calc = subtotal - (subtotal * vatrate/100)
         setTotal(total_calc)
-        console.log(total)
-    }, [vatrate])
+    }, [vatrate, subtotal])
 
     return (
     <TableContainer>

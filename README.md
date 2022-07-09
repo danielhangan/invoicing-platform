@@ -1,4 +1,4 @@
-# Open-Source Invoicing Tracking and Management Platform For Startups and Freelancers
+# [CS50 x Web Development] Invoicing Platform for Freelancers and Remote Workers.
 
 Tech stack: Django, Ninja API, Nextjs, ChakraUI \n
 
