@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { InvoiceLayout } from '../../../layouts/InvoiceLayout'
+import { LoadingSpinner } from '../../../components/Spinner'
 
 
 export default function EditInvoice ({ invoice_info }) {
+  const [invoice_data, setInvoice_data] = useState()
+
+  useEffect(() => {
+    setInvoice_data(invoice_info)
+  }, [invoice_info])
+
+  if (invoice_data === undefined) {
+    return (
+      <LoadingSpinner />
+    )
+  }
 
   return (
-    <InvoiceLayout invoice_mode='preview' invoice_info={invoice_info} />
+    <InvoiceLayout invoice_mode='edit' invoice_info={invoice_data} />
   )
 }
 
@@ -29,7 +41,6 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
   const res = await fetch('http://localhost:3000/api/invoices/',{method: "GET"})
   const invoices = await res.json()
-  // comment
 
   const paths = invoices.map((invoice) => ({
     params: { id: invoice.invoice_id.toString() }

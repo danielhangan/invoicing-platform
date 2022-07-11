@@ -80,6 +80,7 @@ export const IssuerAddress = ({ view_mode }) => {
             fontSize="sm"
             value={issuer_email}
             onChange={(e) => setIssuer_email(e.target.value)}
+            rounded="sm"
         />
 
         <Button 
@@ -92,6 +93,7 @@ export const IssuerAddress = ({ view_mode }) => {
             bg={issuer_company_name || issuer_address_country ? 'white' : 'grey.100'}
             fontSize="sm"
             size="sm"
+            rounded="sm"
         >
             <Flex flexDir="column" gap={2} textAlign="left">
                 <Text as="h1" fontSize="2xl">{issuer_company_name}</Text>

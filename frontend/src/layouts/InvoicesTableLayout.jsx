@@ -8,10 +8,12 @@ import DashboardLayout from './DashboardLayout'
 import { getSession } from 'next-auth/react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { InvoiceTable } from '../components/Dashboard/InvoiceTable'
 
 
-export const InvoicesTableLayout = ({user_data, children}) => {
+export const InvoicesTableLayout = ({ user_data, children }) => {
   const router = useRouter()
+
   const CreateNewInvoice = async () => {
     await axios.post("/api/invoices/create/", 
     {
@@ -43,7 +45,7 @@ export const InvoicesTableLayout = ({user_data, children}) => {
         </Flex>
 
         <Flex>
-          <Text>Table</Text>
+          <InvoiceTable invoices={user_data['invoices']} status='all' />
         </Flex>
       </Flex>
       {children}

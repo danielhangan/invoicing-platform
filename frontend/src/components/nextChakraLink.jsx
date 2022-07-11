@@ -10,7 +10,7 @@ export default function NextChakraLink(props) {
         {...props}
         _active={{ boxShadow: "none" }}
         _focus={{ boxShadow: "none" }}
-        _hover={{ textDecoration: "none" }}
+        _hover={{ textDecoration: "underline" }}
       >
         {props.children}
       </Link>

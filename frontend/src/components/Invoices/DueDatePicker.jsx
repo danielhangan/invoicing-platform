@@ -15,6 +15,7 @@ import { InvoiceContext } from '../../layouts/InvoiceLayout'
 const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <Input 
         size="sm" 
+        w={48}
         className="example-custom-input" 
         onClick={onClick}
         ref={ref} 

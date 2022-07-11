@@ -21,13 +21,15 @@ export const ServiceDateRangePicker = ({ view_mode }) => {
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <Input 
             size="sm" 
+            w={48}
             fontSize="sm"
             className="example-custom-input" 
             onClick={onClick}
             ref={ref} 
             value={value}
             onChange={() => value}
-            placeholder={new Date().toISOString().split("T")[0]}
+            placeholder='2022-01-01 - 2022-02-01'
+            rounded="sm"
             />
     ))
     return (

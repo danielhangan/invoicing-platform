@@ -14,6 +14,7 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react'
+import NextChakraLink from '../components/nextChakraLink'
 import { ServiceDateRangePicker } from '../components/Invoices/ServiceDateRangePicker'
 import { DueDatePicker } from '../components/Invoices/DueDatePicker'
 import { LoadingSpinner } from '../components/Spinner'
@@ -28,6 +29,8 @@ export const InvoiceContext = createContext(null)
 
 export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
   const router = useRouter()
+
+  const [invoice_view_mode, setInvoice_view_mode] = useState('')
   const [servicedate, setServicedate] = useState([null, null])
   const [duedate, setDuedate] = useState(new Date())
   const [issuer_email, setIssuer_email] = useState('')
@@ -51,6 +54,8 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
   const [items, setItems] = useState([])
   const [editInvoiceCode, setEditInvoiceCode] = useState(false)
   const [vatrate, setVatrate] = useState(0)
+
+  useEffect(() => {setInvoice_view_mode(invoice_mode)}, [invoice_mode])
 
   useEffect(() => {
     setServicedate([new Date(invoice_info.data.service_date_from), new Date(invoice_info.data.service_date_to)])
@@ -80,9 +85,15 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
 
   if (invoice_info.data === "not found") {
     return (
-      <Box bg="grey.100">
-        <LoadingSpinner />
-      </Box>
+      <Flex bg="grey.100" flexDir="column" position="fixed" w="100%" h="100%" justify="center" align="center">
+        <Text fontSize="xl" fontWeight="semibold">Invoice Not Found</Text>
+        <NextChakraLink href="/dashboard">
+          <Flex flexDir="row" gap={1}>
+            <Icon as={FiArrowLeft}/>
+            <Text>Go Back</Text>
+          </Flex>
+        </NextChakraLink>
+      </Flex>
     )
   }
 
@@ -141,14 +152,14 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
       /> 
     </Box>
     <Grid templateColumns='repeat(4, 1fr)' gap={6} p={12}>
-      <GridItem minW="100vh" minH="100vh" colSpan={3} rounded="lg" p={6} bg="white">
+      <GridItem minW="100vh" minH="100vh" colSpan={invoice_view_mode === 'edit' ? 3 : 4} rounded="lg" p={6} bg="white">
         <Flex flexDir={['column', 'row']} justify="space-between" align="center">
-          <ServiceDateRangePicker />
+          <ServiceDateRangePicker view_mode={invoice_view_mode} />
           <Flex flexDir="column" justify="center" align="center" gap={4} mb={4}>
             <Icon w={12} h={12} color="grey.500" boxShadow="lg" p={2} mt={0} rounded="xl" as={FiUpload} />
             <Flex flexDir="row" fontSize="2xl" fontWeight="semibold" alignItems="center" justifyContent="center">
               <Text>Invoice #</Text>
-              {invoice_mode === 'edit' ?
+              {invoice_view_mode === 'edit' ?
               <>
               {editInvoiceCode ? 
               <Input 
@@ -156,12 +167,14 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
                 onChange={(e) => setInvoicecode(e.target.value)}
                 onBlur={() => setEditInvoiceCode(false)}
                 size="sm"
-                w="20%"
+                htmlSize={2}
+                w='auto'
                 type="text"
                 placeholder="001"
                 bg="grey.100"
                 fontWeight="normal"
                 fontSize="2xl"
+                rounded="sm"
               />
               :
               <Text onClick={() => setEditInvoiceCode(true)} color="grey.400">{invoicecode ? invoicecode : setInvoicecode("001")}</Text>
@@ -172,21 +185,21 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
             }
             </Flex>
           </Flex>
-          <DueDatePicker view_mode={invoice_mode} />
+          <DueDatePicker view_mode={invoice_view_mode} />
         </Flex>
         <Divider />
         <Grid templateColumns='repeat(2, 1fr)' minH="30vh" gap={6} mt={8} mb={4}>
           <GridItem colSpan={1} h="100%">
-            <IssuerAddress view_mode={invoice_mode} />
+            <IssuerAddress view_mode={invoice_view_mode} />
           </GridItem>
           <GridItem colSpan={1}>
-            <BilledAddress view_mode={invoice_mode} />
+            <BilledAddress view_mode={invoice_view_mode} />
           </GridItem>
         </Grid>
         <Divider />
-        <InvoiceItems view_mode={invoice_mode} />
+        <InvoiceItems view_mode={invoice_view_mode} />
       </GridItem>
-      {invoice_mode === 'edit' ?
+      {invoice_view_mode === 'edit' ?
       <GridItem colSpan={1} w="100%">
         <Flex flexDir="column" w="100%">
         <Button colorScheme='blue' w="100%" size="sm" py={5}>
@@ -194,8 +207,8 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
           Send Invoice
         </Button>
         <Flex flexDir="row" justifyContent="space-between" my={2}>
-          <Button bg="white" w="48%" size="sm" py={5}>Preview</Button>
-          <Button bg="white" w="48%" size="sm" py={5}>Download</Button>
+          <Button onClick={() => setInvoice_view_mode('preview')} bg="white" w="48%" size="sm" py={5}>Preview</Button>
+          <Button bg="white" w="48%" size="sm" py={5}>Save</Button>
         </Flex>
         <Divider />
         <Flex flexDir="column" my={2}>
@@ -212,13 +225,7 @@ export const InvoiceLayout = ({ invoice_mode, invoice_info }) => {
         </Flex>
       </GridItem>
       :
-      <GridItem colSpan={1} w="100%">
-        <Flex flexDir="column" w="100%">
-          <Text>Pay with Paypal</Text>
-          <Text>Pay with Stripe</Text>
-          <Text>Pay with Revolut</Text>
-        </Flex>
-      </GridItem>
+      null
       }
     </Grid>
     </Box>

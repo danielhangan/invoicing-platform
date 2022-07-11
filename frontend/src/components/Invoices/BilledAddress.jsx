@@ -80,6 +80,7 @@ export const BilledAddress = ({ view_mode }) => {
                 fontSize="sm"
                 value={billed_email}
                 onChange={(e) => setBilled_email(e.target.value)}
+                rounded="sm"
             />
             <Button 
                 w="100%"
@@ -91,6 +92,7 @@ export const BilledAddress = ({ view_mode }) => {
                 bg={billed_company_name || billed_address_country ? 'white' : 'grey.100'}
                 fontSize="sm"
                 size="sm"
+                rounded="sm"
             >
                 <Flex flexDir="column" gap={2} textAlign="left">
                     <Text as="h1" fontSize="2xl">{billed_company_name}</Text>
