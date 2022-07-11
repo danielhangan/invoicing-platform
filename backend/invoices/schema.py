@@ -88,6 +88,7 @@ class DisplayInvoice(Schema):
     product_type: InvoiceProductType
     items: Optional[List[InvoiceItem]] = []
     vat_rate: Optional[float] = 0.0
+    created_at: datetime = None
 
 
 class UpdateInvoice(Schema):
