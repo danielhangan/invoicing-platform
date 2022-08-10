@@ -83,7 +83,7 @@ export const EditCardModal = ({ company_info }) => {
         onClose={onClose}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx={4}>
           <ModalHeader>Create your account</ModalHeader>
           <ModalCloseButton />
             <ModalBody pb={6}>
@@ -172,14 +172,14 @@ export const EditCardModal = ({ company_info }) => {
                 </FormControl>
             </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter gap={2}>
 
               {updatecompany ? 
               <Button disabled="True" size="sm" colorScheme="red"><Spinner size='sm' mr={3}/>Save</Button>
               :
               <Button onClick={SubmitCompanyUpdate} size="sm" colorScheme="red">Save</Button>
               }
-            <Button onClick={onClose}>Cancel</Button>
+            <Button size="sm" onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

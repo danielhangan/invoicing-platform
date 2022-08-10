@@ -113,7 +113,7 @@ export const IssuerAddress = ({ view_mode }) => {
         </Button>
         </Flex>
         :
-        <Flex h="100%" flexDir="column" gap={6} p={4}>
+        <Flex h="100%" flexDir="column" gap={6}>
         <Text>{issuer_email}</Text>
 
         <Flex flexDir="column" gap={2} textAlign="left">

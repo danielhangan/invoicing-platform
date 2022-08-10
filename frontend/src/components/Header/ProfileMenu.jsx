@@ -27,8 +27,6 @@ export const ProfileMenu = () => {
                 </MenuGroup>
                 <MenuDivider />
                 <MenuGroup title='Help'>
-                {/* <MenuItem>Docs</MenuItem>
-                <MenuItem>FAQ</MenuItem> */}
                 <MenuItem onClick={() => signOut()}>
                     Logout
                 </MenuItem>

@@ -68,7 +68,7 @@ export const AddCompanyModal = () => {
 
     return (
       <>
-        <Button colorScheme='teal' size='sm' onClick={onOpen}>New Company</Button>
+        <Button colorScheme='blue' size='sm' onClick={onOpen}>New Company</Button>
   
         <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />

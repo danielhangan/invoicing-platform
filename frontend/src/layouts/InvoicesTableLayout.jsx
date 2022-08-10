@@ -35,7 +35,7 @@ export const InvoicesTableLayout = ({ user_data, children }) => {
   return (
     <DashboardLayout>
       <Flex flexDir="column" gap={2}>
-        <Flex flexDir="row" justify="space-between" align="center" my={4} mx={12}>
+        <Flex flexDir="row" justify="space-between" align="center" my={4} ml={6} mr={12}>
           <Flex align="center">
             <Text fontSize="2xl" fontWeight="semibold">Invoices</Text>
           </Flex>
@@ -44,9 +44,7 @@ export const InvoicesTableLayout = ({ user_data, children }) => {
           </Flex>
         </Flex>
 
-        <Flex>
-          <InvoiceTable invoices={user_data['invoices']} status='all' />
-        </Flex>
+      <InvoiceTable invoices={user_data['invoices']} status='all' />
       </Flex>
       {children}
     </DashboardLayout>

@@ -33,4 +33,19 @@ export default async function get_invoice_by_id(req, res) {
             res.status(400).end()
         })
     }
+
+    if (req.method === 'DELETE') {
+        axios.delete(`${process.env.BASE_URL}/invoices/${invoice_id}`,
+        {
+          headers: {
+              Authorization: `Bearer ${process.env.AUTH_SECRET}`
+          }
+        })
+        .then((data) => {
+            res.status(200).json(data.data)
+        })
+        .catch((err) => {
+            res.status(400).end()
+        })
+    }
 }

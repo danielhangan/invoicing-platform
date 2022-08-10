@@ -5,6 +5,7 @@ import {
     Flex,
     IconButton,
     HStack,
+    Button,
     Icon,
     Text,
     Link as ChakraLink,
@@ -19,9 +20,7 @@ import {
 import {
     FiMenu,
     FiGrid,
-    FiLayers,
     FiBriefcase,
-    FiHeart
 } from 'react-icons/fi'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import NavItem from '../components/SideBar/NavItem'
@@ -42,7 +41,7 @@ export default function DashboardLayout ({ children }) {
     })
     const [navSize, changeNavSize] = useState("large")
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const bgcolor = useColorModeValue("grey.50", "grey.50")
+    const bgcolor = useColorModeValue("grey.50", "grey.700")
 
     if (status === 'loading') {
         return <LoadingSpinner />
@@ -61,11 +60,11 @@ export default function DashboardLayout ({ children }) {
         minH="100vh"
         m={1}
     >
-        <GridItem alignItems="right" ml={[12, 0]} area={'header'} bg="grey.50">
-            <HStack justify="flex-end" w="-moz-available" position="fixed" spacing={4} mr={4}>
+        <GridItem alignItems="right" ml={[12, 0]} area={'header'} bg={bgcolor}>
+            <Flex align="center" justify="flex-end" gap={2}>
                     <ProfileMenu />
                     <ThemeToggler />
-            </HStack>
+            </Flex>
         </GridItem>
         <GridItem 
             area={['header', 'nav']}
@@ -101,7 +100,6 @@ export default function DashboardLayout ({ children }) {
                     }}
                 />
                 <NavItem navSize={navSize} icon={FiGrid} redirect="/dashboard" title="Dashboard" />
-                {/* <NavItem navSize={navSize} icon={FiLayers} redirect="/projects" title="Projects" /> */}
                 <NavItem navSize={navSize} icon={FiBriefcase} redirect="/companies" title="Companies" />
             </Flex>
             <IconButton
@@ -118,20 +116,21 @@ export default function DashboardLayout ({ children }) {
             <Drawer placement='right' onClose={onClose} isOpen={isOpen}>
             <DrawerOverlay />
                 <DrawerContent>
-                <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
+                <DrawerHeader borderBottomWidth='1px'>Go to</DrawerHeader>
                 <DrawerBody>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+                    <Flex flexDir="column">
+                        <NavItem navSize={navSize} icon={FiGrid} redirect="/dashboard" title="Dashboard" />
+                        <NavItem navSize={navSize} icon={FiBriefcase} redirect="/companies" title="Companies" />
+                    </Flex>
                 </DrawerBody>
                 </DrawerContent>
             </Drawer>
         </Flex>
         </GridItem>
-        <GridItem area={'main'} bg="grey.50">
+        <GridItem area={'main'} bg={bgcolor}>
             {children}
         </GridItem>
-        <GridItem area={'footer'} bg="grey.50">
+        <GridItem area={'footer'} bg={bgcolor}>
             <Footer />
         </GridItem>
     </Grid>
